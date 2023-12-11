@@ -5,24 +5,19 @@ import ra.imp.Book;
 
 import java.io.*;
 import java.util.*;
+import java.io.FileNotFoundException;
 
 public class Main {
     public static List<Book> listBook = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Book> listBook = new ArrayList<>();
-        Book book = new Book();
-        listBook.add(book);
-        writeDataToFile(listBook);
-        List<Book> listBookRead = readDataFromFile();
-        if (listBookRead == null) {
-            System.err.println("Có lỗi trong quá trình đọc file");
-        } else {
-            System.out.println("Thông tin sinh viên vừa đọc: ");
-            listBookRead.forEach(Book -> System.out.println(book));
+        try{
+            listBook = Main.readDataFromFile();
+        }catch(Exception ex){
+            System.err.println("File not found");
+            listBook = new ArrayList<>();
         }
-        Main main = new Main();
         int choice = 0;
         do {
             System.out.println("*********************************MENU********************************\n" +
@@ -42,36 +37,36 @@ public class Main {
             }
             switch (choice) {
                 case 1:
-                    main.inputBook(scanner);
+                    inputBook(scanner);
                     break;
                 case 2:
-                    main.displayBook();
+                    displayBook();
                     break;
                 case 3:
-                    main.updateBookById(scanner);
+                    updateBookById(scanner);
                     break;
                 case 4:
-                    main.deleteBookById(scanner);
+                    deleteBookById(scanner);
                     break;
                 case 5:
-                    main.sortBookByPrice();
+                    sortBookByPrice();
                     break;
                 case 6:
-                    main.statisticalBookByPrice(scanner);
+                    statisticalBookByPrice(scanner);
                     break;
                 case 7:
-                    main.searchBookByAuthor(scanner);
+                    searchBookByAuthor(scanner);
                     break;
                 case 8:
+                    writeDataToFile();
                     System.exit(0);
-                    break;
                 default:
                     System.err.println("Mời bạn lựa chon từ 1-8");
             }
         } while (true);
     }
 
-    public void inputBook(Scanner scanner) {
+    public static void inputBook(Scanner scanner) {
         System.out.println("Mời bạn nhập số lượng sách: ");
         try {
             int n = Integer.parseInt(scanner.nextLine());
@@ -85,20 +80,20 @@ public class Main {
         }
     }
 
-    public void displayBook() {
+    public static void displayBook() {
         System.out.println("THÔNG TIN SÁCH: ");
         try {
             for (int i = 0; i < listBook.size(); i++) {
                 Book book = listBook.get(i);
                 book.displayData();
-                System.out.println("-------------------------------------");
+                System.out.println("\n-------------------------------------\n");
             }
         } catch (Exception e) {
             System.err.println("Có lỗi: " + e);
         }
     }
 
-    public void updateBookById(Scanner scanner) {
+    public static void updateBookById(Scanner scanner) {
         System.out.println("Mời bạn nhập mã sách cần cập nhật: ");
         try {
             int updateBookId = Integer.parseInt(scanner.nextLine());
@@ -120,7 +115,7 @@ public class Main {
         }
     }
 
-    public void deleteBookById(Scanner scanner) {
+    public static void deleteBookById(Scanner scanner) {
         System.out.println("Mời bạn nhập mã sách cần xóa: ");
         try {
             int deleteBookId = Integer.parseInt(scanner.nextLine());
@@ -138,10 +133,10 @@ public class Main {
             System.err.println("Có lỗi " + e);
         }
     }
-    public void sortBookByPrice(){
+    public static void sortBookByPrice(){
         Collections.sort(listBook, Comparator.comparing(Book::getExportPrice));
     }
-    public void statisticalBookByPrice(Scanner scanner){
+    public static void statisticalBookByPrice(Scanner scanner){
         try {
             System.out.println("Mời bạn nhập khoảng giá đầu: ");
             Float a = Float.parseFloat(scanner.nextLine());
@@ -170,7 +165,7 @@ public class Main {
             System.err.println("Có lỗi: " +e);
         }
     }
-    public void searchBookByAuthor(Scanner scanner){
+    public static void searchBookByAuthor(Scanner scanner){
         System.out.println("Mời bạn nhập tên tác giả: ");
         try {
             String searchAuthor = scanner.nextLine();
@@ -189,8 +184,8 @@ public class Main {
         }
     }
 
-    public static void writeDataToFile(List<Book> listBook) {
-        File file = new File("books.txt");
+    public static void writeDataToFile() {
+        File file = new File("book.txt");
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
@@ -225,7 +220,7 @@ public class Main {
 
     public static List<Book> readDataFromFile() {
         List<Book> listBookRead = null;
-        File file = new File("books.txt");
+        File file = new File("book.txt");
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
@@ -257,6 +252,6 @@ public class Main {
                 }
             }
         }
-        return null;
+        return listBookRead;
     }
 }

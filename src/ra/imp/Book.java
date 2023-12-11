@@ -3,6 +3,7 @@ package ra.imp;
 import ra.IBook;
 import ra.run.Main;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -223,8 +224,20 @@ public class Book implements IBook {
     }
 
     @Override
-    public int compareTo(Book otherBoook){
-        return Float.compare(this.exportPrice, otherBoook.exportPrice);
+    public int compareTo(Book otherBook) {
+        return Float.compare(this.exportPrice, otherBook.exportPrice);
     }
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", bookName='" + bookName + '\'' +
+                ", importPrice=" + importPrice +
+                ", exportPrice=" + exportPrice +
+                ", author='" + author + '\'' +
+                ", created=" + created +
+                ", descriptions='" + descriptions + '\'' +
+                '}';
+    }
 }
